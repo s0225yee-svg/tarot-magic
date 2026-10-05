@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>神秘塔羅預言 | Destiny Revelation</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Serif TC', serif;
+            background-color: #080b12;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+        .cinzel {
+            font-family: 'Cinzel', serif;
+        }
+        .tarot-glow {
+            box-shadow: 0 0 30px rgba(217, 119, 6, 0.35);
+        }
+        /* 秘密控制面板樣式 */
+        #secret-panel {
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(100%);
+        }
+        #secret-panel.active {
+            transform: translateY(0);
+        }
+        /* 自定義捲軸 */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between relative select-none">
+
+    <!-- 背景星空微光 -->
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-purple-950/20 via-slate-950/90 to-black pointer-events-none z-0"></div>
+
+    <!-- 頂部標題列 -->
+    <header class="relative z-10 text-center py-5 px-4 border-b border-amber-500/10">
+        <h1 class="cinzel text-xl md:text-2xl font-bold tracking-widest text-amber-400 drop-shadow-md">ARCANA OF DESTINY</h1>
+        <p class="text-[11px] text-slate-400 tracking-wider mt-1">命運的軌跡早已注定，揭開靈魂的深處</p>
+    </header>
+
+    <!-- 主要內容區：塔羅牌展示 -->
+    <main class="relative z-10 flex-grow flex flex-col items-center justify-center px-4 py-6">
+        
+        <div id="loading-view" class="text-center py-12">
+            <div class="inline-block animate-spin rounded-full h-10 w-10 border-4 border-amber-500 border-t-transparent mb-4"></div>
+            <p class="text-slate-400 text-xs tracking-widest animate-pulse">正在感應宇宙星象與能量場...</p>
+        </div>
+
+        <div id="card-view" class="hidden flex flex-col items-center max-w-sm w-full mx-auto transition-all duration-700 opacity-0 scale-95">
+            <!-- 經典偉特風格牌卡外框 -->
+            <div class="relative p-3 bg-gradient-to-b from-amber-600/40 via-slate-900 to-amber-950/80 rounded-xl tarot-glow border border-amber-500/40 mb-6 group w-72">
+                <div class="absolute -inset-1 bg-gradient-to-r from-amber-500 to-purple-600 rounded-xl blur opacity-25 group-hover:opacity-40 transition duration-1000"></div>
+                
+                <div class="relative bg-slate-950 p-4 rounded-lg text-center overflow-hidden h-[420px] flex flex-col justify-between border border-amber-500/20">
+                    <div class="flex justify-between items-center text-amber-400/80 cinzel text-[11px] tracking-widest uppercase border-b border-amber-500/20 pb-2">
+                        <span id="card-category-badge">Major Arcana</span>
+                        <span id="card-number">0</span>
+                    </div>
+                    
+                    <!-- 偉特塔羅牌圖面或自訂圖片展示 -->
+                    <div class="my-auto flex flex-col items-center justify-center">
+                        <div class="w-28 h-40 rounded border border-amber-500/40 bg-gradient-to-br from-slate-900 via-purple-950/40 to-slate-900 flex flex-col items-center justify-center mb-3 shadow-inner relative overflow-hidden group-hover:scale-105 transition duration-500">
+                            <!-- 顯示自訂圖片或預設圖騰 -->
+                            <div id="card-image-container" class="absolute inset-0 flex items-center justify-center bg-slate-900">
+                                <span class="text-4xl filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" id="card-symbol">🃏</span>
+                            </div>
+                        </div>
+                        <h2 class="cinzel text-lg font-bold text-amber-200 tracking-wider mb-1" id="card-name-en">The Fool</h2>
+                        <h3 class="text-base font-bold text-white tracking-widest" id="card-name-zh">愚者</h3>
+                    </div>
+
+                    <div class="text-[9px] text-amber-500/70 cinzel tracking-widest pt-2 border-t border-amber-500/20">DIVINATION REVEALED</div>
+                </div>
+            </div>
+
+            <!-- 牌義解讀 -->
+            <div class="bg-slate-900/90 backdrop-blur-md border border-slate-800 rounded-xl p-5 text-center shadow-xl w-full">
+                <h4 class="text-amber-400 font-bold text-xs mb-2 flex items-center justify-center gap-2">
+                    <span>✦</span> 命運指引 <span>✦</span>
+                </h4>
+                <p id="card-meaning" class="text-slate-300 text-xs md:text-sm leading-relaxed">
+                    這張牌象徵著全新的開始、無限的可能與純粹的直覺。你所選擇的道路正引領你走向未知的奇蹟。
+                </p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- 底部版權與魔術師觸發 -->
+    <footer class="relative z-10 py-3 text-center text-[10px] text-slate-600 border-t border-slate-900">
+        <p>Verified Secure Connection © 2026</p>
+        <!-- 點擊右下角極不顯眼的版權符號 3 下，即可叫出 78 張牌秘密控制面板 -->
+        <span id="secret-trigger" class="cursor-pointer hover:text-slate-500 select-none inline-block mt-1 px-2 py-1">✨</span>
+    </footer>
+
+    <!-- 【魔術師專用 78 張完整塔羅秘密控制面板】 -->
+    <div id="secret-panel" class="fixed inset-x-0 bottom-0 z-50 bg-slate-950/98 backdrop-blur-2xl border-t border-amber-500/40 p-4 shadow-2xl max-h-[90vh] flex flex-col">
+        <div class="max-w-md mx-auto w-full flex flex-col h-full overflow-hidden">
+            
+            <!-- 面板頂端控制列 -->
+            <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-800">
+                <h3 class="cinzel text-amber-400 font-bold text-xs flex items-center gap-2">
+                    <span>🔮</span> 78張偉特塔羅秘密控制台 (極速點選)
+                </h3>
+                <button id="close-panel" class="text-slate-400 hover:text-white text-xs bg-slate-800 px-3 py-1 rounded-md border border-slate-700">收起面板</button>
+            </div>
+
+            <!-- 自訂圖片網址設定區 -->
+            <div class="mb-3 bg-slate-900 p-2.5 rounded-lg border border-slate-800">
+                <label class="block text-[11px] text-amber-300 mb-1 font-bold">🎯 設定當前牌的自訂圖片網址 (URL)：</label>
+                <div class="flex gap-2">
+                    <input type="text" id="custom-image-input" placeholder="貼上圖片網址（留空則使用預設圖騰）" class="flex-grow bg-slate-950 border border-slate-700 rounded px-2 py-1.5 text-xs text-amber-200 placeholder-slate-600 focus:outline-none focus:border-amber-500">
+                    <button id="save-image-btn" class="bg-amber-600 hover:bg-amber-500 text-white text-xs px-3 py-1 rounded font-bold transition">套用</button>
+                </div>
+            </div>
+            
+            <!-- 分類標籤頁切換 -->
+            <div class="grid grid-cols-5 gap-1 mb-3 text-[11px]" id="category-tabs">
+                <button data-cat="major" class="cat-tab py-1.5 px-1 rounded bg-amber-600 text-white font-bold transition">大牌(0-21)</button>
+                <button data-cat="wands" class="cat-tab py-1.5 px-1 rounded bg-slate-800 text-slate-300 hover:bg-slate-700 transition">權杖</button>
+                <button data-cat="cups" class="cat-tab py-1.5 px-1 rounded bg-slate-800 text-slate-300 hover:bg-slate-700 transition">聖杯</button>
+                <button data-cat="swords" class="cat-tab py-1.5 px-1 rounded bg-slate-800 text-slate-300 hover:bg-slate-700 transition">寶劍</button>
+                <button data-cat="pentacles" class="cat-tab py-1.5 px-1 rounded bg-slate-800 text-slate-300 hover:bg-slate-700 transition">金幣</button>
+            </div>
+
+            <!-- 搜尋或快速篩選框 -->
+            <div class="mb-3">
+                <input type="text" id="card-search-input" placeholder="🔍 快速搜尋牌名（例如：0, 1, 權杖王牌, 戀人...）" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-1.5 text-xs text-amber-200 placeholder-slate-500 focus:outline-none focus:border-amber-500">
+            </div>
+
+            <!-- 精簡快速點選數字方格清單 -->
+            <div class="grid grid-cols-4 sm:grid-cols-6 gap-1.5 overflow-y-auto pr-1 flex-grow mb-3 min-h-[160px] max-h-[240px]" id="tarot-list">
+                <!-- 動態載入精簡數字項目 -->
+            </div>
+
+            <!-- 當前設定狀態列 -->
+            <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-xs">
+                <span class="text-slate-400">目前預設：</span>
+                <span id="current-setting-label" class="text-amber-400 font-bold">愚者 (The Fool)</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 核心互動與 78 張牌資料庫邏輯 -->
+    <script>
+        // 78 張完整偉特塔羅牌資料庫
+        const tarotCards = [
+            // --- 大阿爾克納 (Major Arcana - 22張) ---
+            { id: 'fool', cat: 'major', num: '0', en: 'The Fool', zh: '愚者', symbol: '🃏', meaning: '象徵純真、新開始、冒險與無限可能。命運正召喚你踏上一場意想不到的奇幻旅程。' },
+            { id: 'magician', cat: 'major', num: 'I', en: 'The Magician', zh: '魔術師', symbol: '🪄', meaning: '象徵創造力、意志力與化腐朽為神奇的力量。你擁有掌控全場、心想事成的潛能。' },
+            { id: 'high_priestess', cat: 'major', num: 'II', en: 'The High Priestess', zh: '女祭司', symbol: '🌙', meaning: '象徵直覺、神秘與內在智慧。表面下隱藏著巨大秘密，唯有靜心聆聽內心才能洞悉真相。' },
+            { id: 'empress', cat: 'major', num: 'III', en: 'The Empress', zh: '皇后', symbol: '👑', meaning: '象徵豐盛、母性、大自然的滋養與藝術美感。幸福與豐收正在向你靠攏。' },
+            { id: 'emperor', cat: 'major', num: 'IV', en: 'The Emperor', zh: '皇帝', symbol: '🏛️', meaning: '象徵權威、秩序、領導力與穩固的基礎。你的果斷與自律將帶你走向成功。' },
+            { id: 'hierophant', cat: 'major', num: 'V', en: 'The Hierophant', zh: '教皇', symbol: '📜', meaning: '象徵心靈導師、傳統、信仰與體制規範。尋求正統與智者的指引將使你安心。' },
+            { id: 'lovers', cat: 'major', num: 'VI', en: 'The Lovers', zh: '戀人', symbol: '❤️', meaning: '象徵愛情的抉擇、靈魂的契合與價值觀碰撞。每一次選擇都在定義你的命運。' },
+            { id: 'chariot', cat: 'major', num: 'VII', en: 'The Chariot', zh: '戰車', symbol: '🛡️', meaning: '象徵決心、掌控、突破障礙與勝利。憑藉堅定意志，任何難關都將迎刃而解。' },
+            { id: 'strength', cat: 'major', num: 'VIII', en: 'The Strength', zh: '力量', symbol: '🦁', meaning: '象徵內在的勇氣、溫柔與堅韌。真正的強大並非征服外在，而是駕馭自己的心。' },
+            { id: 'hermit', cat: 'major', num: 'IX', en: 'The Hermit', zh: '隱士', symbol: '🏮', meaning: '象徵內省、尋求真理與心靈指引。暫時的沉澱將點亮你未來的明燈。' },
+            { id: 'wheel', cat: 'major', num: 'X', en: 'Wheel of Fortune', zh: '命運之輪', symbol: '🎡', meaning: '象徵命運之輪的轉動、機會與轉折點。好運正在悄悄降臨，準備迎接驚喜。' },
+            { id: 'justice', cat: 'major', num: 'XI', en: 'Justice', zh: '正義', symbol: '⚖️', meaning: '象徵公平、正義、理智與因果報應。公正的裁決將為你帶來應得的平靜。' },
+            { id: 'hanged_man', cat: 'major', num: 'XII', en: 'The Hanged Man', zh: '倒吊人', symbol: '🙃', meaning: '象徵換位思考、犧牲與無私奉獻。換個角度看世界，瓶頸將瞬間迎刃而解。' },
+            { id: 'death', cat: 'major', num: 'XIII', en: 'Death', zh: '死神', symbol: '🦋', meaning: '象徵徹底的轉化、舊局的結束與新生的開始。放下過去才能迎向蛻變。' },
+            { id: 'temperance', cat: 'major', num: 'XIV', en: 'Temperance', zh: '節制', symbol: '🏺', meaning: '象徵平衡、調和、耐心與心靈的寧靜。順其自然地融合，能達到完美狀態。' },
+            { id: 'devil', cat: 'major', num: 'XV', en: 'The Devil', zh: '惡魔', symbol: '🔗', meaning: '象徵執念、誘惑與自我束縛。看清內心的枷鎖，你隨時擁有解開它的自由。' },
+            { id: 'tower', cat: 'major', num: 'XVI', en: 'The Tower', zh: '高塔', symbol: '⚡', meaning: '象徵突如其來的衝擊、舊架構的瓦解與真相大白。破壞是為了建立更真實的未來。' },
+            { id: 'star', cat: 'major', num: 'XVII', en: 'The Star', zh: '星星', symbol: '⭐', meaning: '象徵希望、靈感、療癒與光明前程。經過風雨後，星光將永遠指引著你。' },
+            { id: 'moon', cat: 'major', num: 'XVIII', en: 'The Moon', zh: '月亮', symbol: '🌕', meaning: '象徵幻覺、潛意識與隱藏的恐懼。突破迷霧，直面真實的自我。' },
+            { id: 'sun', cat: 'major', num: 'XIX', en: 'The Sun', zh: '太陽', symbol: '☀️', meaning: '象徵極致的快樂、光明、成功與生機。無限的溫暖正照亮你的整個世界。' },
+            { id: 'judgement', cat: 'major', num: 'XX', en: 'Judgement', zh: '審判', symbol: '📯', meaning: '象徵覺醒、審視過去與命運的呼喚。這是你重新定位自己的人生轉捩點。' },
+            { id: 'world', cat: 'major', num: 'XXI', en: 'The World', zh: '世界', symbol: '🌍', meaning: '象徵圓滿、階段成功、旅行與大團圓。一切努力都將畫上完美的句點。' },
+
+            // --- 權杖牌組 (Wands - 14張) ---
+            { id: 'wands_aces', cat: 'wands', num: 'Ace', en: 'Ace of Wands', zh: '權杖A', symbol: '🔥', meaning: '象徵強大的行動力、事業新機會與無限的熱情爆發。' },
+            { id: 'wands_2', cat: 'wands', num: '2', en: 'Two of Wands', zh: '權杖2', symbol: '🗺️', meaning: '象徵格局規劃、跨出舒適圈與展望未來的雄心壯志。' },
+            { id: 'wands_3', cat: 'wands', num: '3', en: 'Three of Wands', zh: '權杖3', symbol: '⛵', meaning: '象徵遠見、合作夥伴擴展與海外發展的豐碩成果。' },
+            { id: 'wands_4', cat: 'wands', num: '4', en: 'Four of Wands', zh: '權杖4', symbol: '🏡', meaning: '象徵家宅安寧、慶典、婚禮與階段性任務的圓滿成功。' },
+            { id: 'wands_5', cat: 'wands', num: '5', en: 'Five of Wands', zh: '權杖5', symbol: '⚔', meaning: '象徵競爭、意見分歧與需要透過溝通突破的混亂局勢。' },
+            { id: 'wands_6', cat: 'wands', num: '6', en: 'Six of Wands', zh: '權杖6', symbol: '🏆', meaning: '象徵凱旋歸來、榮譽、勝利與大受讚賞的榮耀時刻。' },
+            { id: 'wands_7', cat: 'wands', num: '7', en: 'Seven of Wands', zh: '權杖7', symbol: '🛡️️', meaning: '象徵捍衛立場、守住優勢與面對挑戰時的頑強抵抗。' },
+            { id: 'wands_8', cat: 'wands', num: '8', en: 'Eight of Wands', zh: '權杖8', symbol: '⚡', meaning: '象徵神速進展、好消息快速降臨與出乎意料的效率。' },
+            { id: 'wands_9', cat: 'wands', num: '9', en: 'Nine of Wands', zh: '權杖9', symbol: '🪵', meaning: '象徵最後防線、堅持到底與經歷風霜後的精神防備。' },
+            { id: 'wands_10', cat: 'wands', num: '10', en: 'Ten of Wands', zh: '權杖10', symbol: '🎒', meaning: '象徵壓力過大、一肩扛起所有責任的疲憊與即將解脫。' },
+            { id: 'wands_page', cat: 'wands', num: 'Page', en: 'Page of Wands', zh: '權杖侍衛', symbol: '🧑‍🎤', meaning: '象徵充滿好奇心的信使、冒險精神與新點子的萌芽。' },
+            { id: 'wands_knight', cat: 'wands', num: 'Knight', en: 'Knight of Wands', zh: '權杖騎士', symbol: '🐎', meaning: '象徵風風火火、衝勁十足、說走就走的行動派青年。' },
+            { id: 'wands_queen', cat: 'wands', num: 'Queen', en: 'Queen of Wands', zh: '權杖女王', symbol: '🌻', meaning: '象徵自信、熱情大方、充滿磁場與獨立自主的領袖氣質。' },
+            { id: 'wands_king', cat: 'wands', num: 'King', en: 'King of Wands', zh: '權杖國王', symbol: '🦁', meaning: '象徵遠見卓識、開創事業的宏觀領導力與強大意志。' },
+
+            // --- 聖杯牌組 (Cups - 14張) ---
+            { id: 'cups_ace', cat: 'cups', num: 'Ace', en: 'Ace of Cups', zh: '聖杯A', symbol: '🏆', meaning: '象徵滿溢的情感、純粹的愛意、心靈滿足與直覺靈感。' },
+            { id: 'cups_2', cat: 'cups', num: '2', en: 'Two of Cups', zh: '聖杯2', symbol: '🥂', meaning: '象徵心靈契合的夥伴關係、深厚友誼或浪漫的戀愛契約。' },
+            { id: 'cups_3', cat: 'cups', num: '3', en: 'Three of Cups', zh: '聖杯3', symbol: '🍇', meaning: '象徵歡聚、派對、朋友慶祝與群體合作的快樂時光。' },
+            { id: 'cups_4', cat: 'cups', num: '4', en: 'Four of Cups', zh: '聖杯4', symbol: '🧘', meaning: '象徵沈思、心靈疲乏、對現狀感到無趣而忽略了身邊機會。' },
+            { id: 'cups_5', cat: 'cups', num: '5', en: 'Five of Cups', zh: '聖杯5', symbol: '🥀', meaning: '象徵沉溺於過去的失落與悲傷，但其實身邊仍有未倒的杯子。' },
+            { id: 'cups_6', cat: 'cups', num: '6', en: 'Six of Cups', zh: '聖杯6', symbol: '🧸', meaning: '象徵童年回憶、純真、老友重逢與溫馨的懷舊感。' },
+            { id: 'cups_7', cat: 'cups', num: '7', en: 'Seven of Cups', zh: '聖杯7', symbol: '☁️', meaning: '象徵過多的幻想、選擇障礙與不切實際的白日夢。' },
+            { id: 'cups_8', cat: 'cups', num: '8', en: 'Eight of Cups', zh: '聖杯8', symbol: '🥾', meaning: '象徵明智的離開、追求更高心靈境界與放下無意義的事物。' },
+            { id: 'cups_9', cat: 'cups', num: '9', en: 'Nine of Cups', zh: '聖杯9', symbol: '🌟', meaning: '俗稱願望牌！象徵心想事成、極大的滿足感與自我慶祝。' },
+            { id: 'cups_10', cat: 'cups', num: '10', en: 'Ten of Cups', zh: '聖杯10', symbol: '🌈', meaning: '象徵家庭圓滿、終極幸福、愛與和平的大團圓結局。' },
+            { id: 'cups_page', cat: 'cups', num: 'Page', en: 'Page of Cups', zh: '聖杯侍衛', symbol: '💌', meaning: '象徵浪漫的告白、情感上的驚喜與純真的藝術靈感。' },
+            { id: 'cups_knight', cat: 'cups', num: 'Knight', en: 'Knight of Cups', zh: '聖杯騎士', symbol: '🕊️', meaning: '象徵溫柔的情人、浪漫的追求者與詩意的藝術家。' },
+            { id: 'cups_queen', cat: 'cups', num: 'Queen', en: 'Queen of Cups', zh: '聖杯女王', symbol: '🐚', meaning: '象徵極度同理心、溫柔療癒與深邃直覺的靈性母親。' },
+            { id: 'cups_king', cat: 'cups', num: 'King', en: 'King of Cups', zh: '聖杯國王', symbol: '🌊', meaning: '象徵成熟的情緒控管、包容力與慈悲智慧的領導者。' },
+
+            // --- 寶劍牌組 (Swords - 14張) ---
+            { id: 'swords_ace', cat: 'swords', num: 'Ace', en: 'Ace of Swords', zh: '寶劍A', symbol: '🗡️', meaning: '象徵銳利的智慧、突破盲點的真相與破釜沉舟的決心。' },
+            { id: 'swords_2', cat: 'swords', num: '2', en: 'Two of Swords', zh: '寶劍2', symbol: '👁️', meaning: '象徵矇眼抉擇、逃避現實與權衡利弊後的僵持狀態。' },
+            { id: 'swords_3', cat: 'swords', num: '3', en: 'Three of Swords', zh: '寶劍3', symbol: '💔', meaning: '象徵心碎、痛苦的真相、背叛與情感上的打擊。' },
+            { id: 'swords_4', cat: 'swords', num: '4', en: 'Four of Swords', zh: '寶劍4', symbol: '🛏', meaning: '象徵身心休養、閉關沉澱與暫時撤退養精蓄銳。' },
+            { id: 'swords_5', cat: 'swords', num: '5', en: 'Five of Swords', zh: '寶劍5', symbol: '🚩', meaning: '象徵爭執、不光彩的勝利、兩敗俱傷的人際衝突。' },
+            { id: 'swords_6', cat: 'swords', num: '6', en: 'Six of Swords', zh: '寶劍6', symbol: '🛶', meaning: '象徵療傷止痛、離開暴風雨前往平靜水域的過渡期。' },
+            { id: 'swords_7', cat: 'swords', num: '7', en: 'Seven of Swords', zh: '寶劍7', symbol: '🦹', meaning: '象徵策略、智取、偷偷摸摸或需要小心防範的謀略。' },
+            { id: 'swords_8', cat: 'swords', num: '8', en: 'Eight of Swords', zh: '寶劍8', symbol: '🪢', meaning: '象徵作繭自縛、受困於恐懼中但其實隨時可掙脫的盲點。' },
+            { id: 'swords_9', cat: 'swords', num: '9', en: 'Nine of Swords', zh: '寶劍9', symbol: '🌙', meaning: '象徵焦慮、失眠、惡夢與過度擔憂的精神壓力。' },
+            { id: 'swords_10', cat: 'swords', num: '10', en: 'Ten of Swords', zh: '寶劍10', symbol: '📌', meaning: '象徵谷底、痛定思痛、最糟狀況已過即將迎來黎明。' },
+            { id: 'swords_page', cat: 'swords', num: 'Page', en: 'Page of Swords', zh: '寶劍侍衛', symbol: '🦅', meaning: '象徵敏銳的觀察力、探聽消息與機智的年輕人。' },
+            { id: 'swords_knight', cat: 'swords', num: 'Knight', en: 'Knight of Swords', zh: '寶劍騎士', symbol: '🌪️', meaning: '象徵風馳電掣、直言不諱、極有效率但帶有殺伐之氣。' },
+            { id: 'swords_queen', cat: 'swords', num: 'Queen', en: 'Queen of Swords', zh: '寶劍女王', symbol: '👑', meaning: '象徵理性、獨立、客觀分析、不苟言笑的智慧女性。' },
+            { id: 'swords_king', cat: 'swords', num: 'King', en: 'King of Swords', zh: '寶劍國王', symbol: '⚖️', meaning: '象徵法律、邏輯、公正無私、嚴格執行規則的最高權威。' },
+
+            // --- 金幣牌組 (Pentacles - 14張) ---
+            { id: 'pentacles_ace', cat: 'pentacles', num: 'Ace', en: 'Ace of Pentacles', zh: '金幣A', symbol: '🪙', meaning: '象徵豐厚財富的起點、物質收穫、實質投資與健康契機。' },
+            { id: 'pentacles_2', cat: 'pentacles', num: '2', en: 'Two of Pentacles', zh: '金幣2', symbol: '🤹', meaning: '象徵財務周轉、多工處理、在變動中尋求平衡的靈活身段。' },
+            { id: 'pentacles_3', cat: 'pentacles', num: '3', en: 'Three of Pentacles', zh: '金幣3', symbol: '🏛️️', meaning: '象徵團隊合作、工匠精神、專業技能受到肯定與建造基業。' },
+            { id: 'pentacles_4', cat: 'pentacles', num: '4', en: 'Four of Pentacles', zh: '金幣4', symbol: '🏦', meaning: '象徵守財、保守、安全感與對金錢資源的強烈掌控慾。' },
+            { id: 'pentacles_5', cat: 'pentacles', num: '5', en: 'Five of Pentacles', zh: '金幣5', symbol: '❄️', meaning: '象徵財務窘迫、寒冬、感到被世界遺棄時的互助溫暖。' },
+            { id: 'pentacles_6', cat: 'pentacles', num: '6', en: 'Six of Pentacles', zh: '金幣6', symbol: '⚖️', meaning: '象徵施比受更有福、慈悲捐助、財富平衡與公平回饋。' },
+            { id: 'pentacles_7', cat: 'pentacles', num: '7', en: 'Seven of Pentacles', zh: '金幣7', symbol: '🌱', meaning: '象徵長期投資的耐心等待、檢視收成與評估努力價值。' },
+            { id: 'pentacles_8', cat: 'pentacles', num: '8', en: 'Eight of Pentacles', zh: '金幣8', symbol: '🔨', meaning: '象徵埋頭苦幹、精益求精、工匠般的專注與技術磨練。' },
+            { id: 'pentacles_9', cat: 'pentacles', num: '9', en: 'Nine of Pentacles', zh: '金幣9', symbol: '🦚', meaning: '象徵財務自由、享受優渥生活成果的豐盛與獨立。' },
+            { id: 'pentacles_10', cat: 'pentacles', num: '10', en: 'Ten of Pentacles', zh: '金幣10', symbol: '🏰', meaning: '象徵家族遺產、百年基業、物質與精神的終極富足。' },
+            { id: 'pentacles_page', cat: 'pentacles', num: 'Page', en: 'Page of Pentacles', zh: '金幣侍衛', symbol: '🌱', meaning: '象徵腳踏實地的學習者、進修機會與實踐夢想的開端。' },
+            { id: 'pentacles_knight', cat: 'pentacles', num: 'Knight', en: 'Knight of Pentacles', zh: '金幣騎士', symbol: '🚜', meaning: '象徵無比的耐心、謹慎穩健、一步一腳印的勞動典範。' },
+            { id: 'pentacles_queen', cat: 'pentacles', num: 'Queen', en: 'Pentacles Queen', zh: '金幣女王', symbol: '🛡️', meaning: '象徵滋養大地、善於理財、顧家且務實慈愛的女性。' },
+            { id: 'pentacles_king', cat: 'pentacles', num: 'King', en: 'Pentacles King', zh: '金幣國王', symbol: '👑', meaning: '象徵商業巨擘、財富權威、企業家氣場與穩固保障。' }
+        ];
+
+        let currentCategory = 'major';
+
+        // 渲染極簡數字方格面板
+        function renderSecretPanel(filterText = '') {
+            const listContainer = document.getElementById('tarot-list');
+            listContainer.innerHTML = '';
+            
+            let filtered = tarotCards.filter(card => {
+                const matchCat = (card.cat === currentCategory);
+                const matchSearch = filterText === '' || card.zh.includes(filterText) || card.en.toLowerCase().includes(filterText.toLowerCase()) || card.num.toLowerCase().includes(filterText.toLowerCase());
+                return filterText !== '' ? matchSearch : matchCat;
+            });
+
+            if (filtered.length === 0) {
+                listContainer.innerHTML = `<div class="col-span-full text-center py-6 text-slate-500 text-xs">找不到符合的塔羅牌</div>`;
+                return;
+            }
+
+            filtered.forEach(card => {
+                const btn = document.createElement('button');
+                btn.className = "py-2 px-1 rounded bg-slate-900 hover:bg-amber-600 hover:text-white border border-slate-800 text-center transition text-xs font-bold text-amber-200 flex flex-col items-center justify-center";
+                
+                // 檢查是否有儲存自訂圖片
+                const hasImg = localStorage.getItem(`tarot_img_${card.id}`);
+                const indicator = hasImg ? `<span class="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1"></span>` : '';
+
+                btn.innerHTML = `
+                    <span class="text-[11px] truncate w-full">${card.zh}</span>
+                    ${indicator}
+                `;
+                
+                btn.onclick = () => {
+                    localStorage.setItem('magician_chosen_tarot', card.id);
+                    updateCurrentSettingLabel(card);
+                    displayCard(card.id);
+                    
+                    document.getElementById('custom-image-input').value = localStorage.getItem(`tarot_img_${card.id}`) || '';
+
+                    btn.classList.add('bg-amber-500', 'text-slate-950', 'scale-95');
+                    setTimeout(() => btn.classList.remove('bg-amber-500', 'text-slate-950', 'scale-95'), 300);
+                };
+                
+                listContainer.appendChild(btn);
+            });
+        }
+
+        function updateCurrentSettingLabel(card) {
+            const label = document.getElementById('current-setting-label');
+            if (label) {
+                label.innerText = `${card.zh} (${card.en})`;
+            }
+        }
+
+        // 根據 ID 顯示對應塔羅牌到觀眾畫面上
+        function displayCard(cardId) {
+            const card = tarotCards.find(c => c.id === cardId) || tarotCards[0];
+            
+            let catName = 'Major Arcana';
+            if (card.cat === 'wands') catName = 'Suit of Wands';
+            if (card.cat === 'cups') catName = 'Suit of Cups';
+            if (card.cat === 'swords') catName = 'Suit of Swords';
+            if (card.cat === 'pentacles') catName = 'Suit of Pentacles';
+
+            document.getElementById('card-category-badge').innerText = catName;
+            document.getElementById('card-number').innerText = card.num;
+            document.getElementById('card-name-en').innerText = card.en;
+            document.getElementById('card-name-zh').innerText = card.zh;
+            document.getElementById('card-meaning').innerText = card.meaning;
+
+            // 處理自訂圖片或預設符號
+            const imgContainer = document.getElementById('card-image-container');
+            const customImg = localStorage.getItem(`tarot_img_${card.id}`);
+            
+            if (customImg && customImg.trim() !== '') {
+                imgContainer.innerHTML = `<img src="${customImg.trim()}" alt="${card.en}" class="w-full h-full object-cover" onerror="this.onerror=null; this.parentNode.innerHTML='<span class=\'text-4xl\'>${card.symbol}</span>';">`;
+            } else {
+                imgContainer.innerHTML = `<span class="text-4xl filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">${card.symbol}</span>`;
+            }
+
+            // 淡入顯示
+            setTimeout(() => {
+                document.getElementById('loading-view').classList.add('hidden');
+                const cardView = document.getElementById('card-view');
+                cardView.classList.remove('hidden');
+                setTimeout(() => {
+                    cardView.classList.remove('opacity-0', 'scale-95');
+                    cardView.classList.add('opacity-100', 'scale-100');
+                }, 50);
+            }, 300);
+        }
+
+        // 初始化與事件監聽
+        window.addEventListener('DOMContentLoaded', () => {
+            renderSecretPanel();
+
+            let currentId = localStorage.getItem('magician_chosen_tarot');
+            if (!currentId) {
+                currentId = 'fool';
+                localStorage.setItem('magician_chosen_tarot', currentId);
+            }
+
+            const activeCard = tarotCards.find(c => c.id === currentId) || tarotCards[0];
+            updateCurrentSettingLabel(activeCard);
+            displayCard(currentId);
+
+            document.getElementById('custom-image-input').value = localStorage.getItem(`tarot_img_${currentId}`) || '';
+
+            window.addEventListener('storage', (e) => {
+                if (e.key === 'magician_chosen_tarot' || e.key && e.key.startsWith('tarot_img_')) {
+                    const activeId = localStorage.getItem('magician_chosen_tarot') || 'fool';
+                    displayCard(activeId);
+                }
+            });
+
+            document.getElementById('save-image-btn').addEventListener('click', () => {
+                const currentId = localStorage.getItem('magician_chosen_tarot') || 'fool';
+                const url = document.getElementById('custom-image-input').value;
+                localStorage.setItem(`tarot_img_${currentId}`, url);
+                displayCard(currentId);
+                renderSecretPanel(document.getElementById('card-search-input').value);
+                
+                const btn = document.getElementById('save-image-btn');
+                const origText = btn.innerText;
+                btn.innerText = 'OK';
+                setTimeout(() => btn.innerText = origText, 800);
+            });
+
+            const tabs = document.querySelectorAll('.cat-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => {
+                        t.classList.remove('bg-amber-600', 'text-white', 'font-bold');
+                        t.classList.add('bg-slate-800', 'text-slate-300');
+                    });
+                    tab.classList.remove('bg-slate-800', 'text-slate-300');
+                    tab.classList.add('bg-amber-600', 'text-white', 'font-bold');
+
+                    currentCategory = tab.getAttribute('data-cat');
+                    document.getElementById('card-search-input').value = '';
+                    renderSecretPanel();
+                });
+            });
+
+            const searchInput = document.getElementById('card-search-input');
+            searchInput.addEventListener('input', (e) => {
+                renderSecretPanel(e.target.value.trim());
+            });
+
+            let clickCount = 0;
+            let clickTimer = null;
+            const trigger = document.getElementById('secret-trigger');
+            const panel = document.getElementById('secret-panel');
+            const closeBtn = document.getElementById('close-panel');
+
+            trigger.addEventListener('click', () => {
+                clickCount++;
+                if (clickCount === 3) {
+                    panel.classList.add('active');
+                    clickCount = 0;
+                }
+                clearTimeout(clickTimer);
+                clickTimer = setTimeout(() => {
+                    clickCount = 0;
+                }, 1000);
+            });
+
+            closeBtn.addEventListener('click', () => {
+                panel.classList.remove('active');
+            });
+        });
+    </script>
+
+</body>
+</html>
